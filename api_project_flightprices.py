@@ -7,6 +7,7 @@
 import config
 import pandas as pd
 import requests
+import matplotlib.pyplot as plt
 import plotly.express as px
 
 # Flight calendar with all flight prices and dates, based on flight destination, without airlines
@@ -22,6 +23,7 @@ response = requests.get(url, headers=headers, params=querystring)
 data = response.json()
 results = data.get('data').get('flights').get('days')
 
+
 # Create empty list to save results
 parsed_data = []
 
@@ -36,10 +38,12 @@ for dictionary in results:
 column_names = ['date', 'group', 'price']
 df = pd.DataFrame(parsed_data, columns=column_names)
 
-# Convert date column to datetime
+
+# Now the data is retrieved, let's start cleaning the data
+# Convert 'date' column to datetime
 df['date'] = pd.to_datetime(df['date'])
 
-# Split datetime column into year, month, and day
+# Split column into year, month, and day
 df['year'] = df['date'].dt.year.astype('Int64')
 df['month'] = df['date'].dt.month.astype('Int64')
 df['day'] = df['date'].dt.day.astype('Int64')
@@ -50,12 +54,25 @@ df['weekday'] = df['date'].dt.weekday
 # Replace integer values of weekdays by text
 df['weekday'] = df['weekday'].astype(str)
 df['weekday_text'] = df['weekday'].str.replace('0', 'monday').str.replace('1', 'tuesday').str.replace('2', 'wednesday').str.replace('3', 'thursday').str.replace('4', 'friday').str.replace('5', 'saturday').str.replace('6', 'sunday')
+df['weekday'] = df['weekday'].astype('Int64')
 
 # Replace values of group column by integers
 df['group_num'] = df['group'].str.replace('high', '2').str.replace('medium', '1').str.replace('low', '0')
 df['group_num'] = df['group_num'].astype('Int64')
 
-# Calculating correlations
+
+# Checking distribution and outliers for 'price' column
+df.boxplot('price')
+# plt.show()
+
+# Create new variables with average group score per month, day, weekday
+group_month = df.groupby('month')[df.index].value_counts()
+
+# Plot results in bar chart for better overview
+px.bar(group_month, barmode='group', labels='group_num').show()
+
+
+# Calculating correlation between variables
 # Create new dataframe with variables we'd like to know correlation of
 df_c = df[['group_num', 'price', 'year', 'month', 'day', 'weekday']]
 
@@ -63,7 +80,7 @@ df_c = df[['group_num', 'price', 'year', 'month', 'day', 'weekday']]
 data_corr = df_c.corr().round(3)
 
 # Show scores in heatmap for overview
-px.imshow(data_corr).show()
+# px.imshow(data_corr).show()
 
 # Prior knowledge:
 # Correlation >=0.7 and <0.9 means there is a strong relationship between the variables.
@@ -71,4 +88,4 @@ px.imshow(data_corr).show()
 # Correlation >=0.3 and <0.5 means there is a weak relationship between the variables.
 # Correlation <0.3 means there is no relationship between the variables.
 
-# Findings: As expected, there is a strong correlation between the variables 'price' and 'group', as they indicated the price range. Further no correlations found.
+# Findings: As expected, there is a strong correlation between the variables 'price' and 'group', as they indicated the price range. No further correlations found.
