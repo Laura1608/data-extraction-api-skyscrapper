@@ -4,6 +4,7 @@
 # - How do flight prices develop over the year? -> Are there differences or patterns noticeable at monthly/weekly/daily level?
 # - Is the amount of time prior to the flight of influence on the price?
 
+import config
 import pandas as pd
 import requests
 import plotly.express as px
@@ -15,9 +16,8 @@ url = "https://sky-scrapper.p.rapidapi.com/api/v1/flights/getPriceCalendar"
 querystring = {"originSkyId": "VLC", "destinationSkyId": "AMS", "fromDate": "2021-01-01"}
 
 headers = {
-    "X-RapidAPI-Key": "1e0d4b7f19mshc21672d5cc2b7d3p1e127ajsn754648442b38",
-    "X-RapidAPI-Host": "sky-scrapper.p.rapidapi.com",
-    'Allow-Hidden': True
+    "X-RapidAPI-Key": config.api_key,
+    "X-RapidAPI-Host": config.api_host
 }
 
 # Retrieve data and change format
