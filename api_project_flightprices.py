@@ -13,9 +13,7 @@ import plotly.express as px
 # Flight calendar with all flight prices and dates, based on flight destination, without airlines
 # For comparison flight prices per date
 url = "https://sky-scrapper.p.rapidapi.com/api/v1/flights/getPriceCalendar"
-
 querystring = {"originSkyId": "VLC", "destinationSkyId": "AMS", "fromDate": "2021-01-01"}
-
 headers = {"X-RapidAPI-Key": config.api_key, "X-RapidAPI-Host": config.api_host}
 
 # Retrieve data from API and parsing text
@@ -66,11 +64,11 @@ df.boxplot('price')
 # plt.show()
 
 # Create new variables with average group score per month, day, weekday
-group_month = df.groupby('month')[df.index].value_counts()
+group_month = df.groupby('month')['group_num'].value_counts()
 
 # Plot results in bar chart for better overview
 px.bar(group_month, barmode='group', labels='group_num').show()
-
+# Adding more charts here...........
 
 # Calculating correlation between variables
 # Create new dataframe with variables we'd like to know correlation of
@@ -89,3 +87,8 @@ data_corr = df_c.corr().round(3)
 # Correlation <0.3 means there is no relationship between the variables.
 
 # Findings: As expected, there is a strong correlation between the variables 'price' and 'group', as they indicated the price range. No further correlations found.
+
+# TO DO:
+# - Adjust chart
+# - Add more charts for rest of variables
+# - Answer RQ part 1
