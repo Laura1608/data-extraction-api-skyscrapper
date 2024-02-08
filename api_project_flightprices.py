@@ -13,7 +13,7 @@ import plotly.express as px
 # Flight calendar with all flight prices and dates, based on flight destination, without airlines
 # For comparison flight prices per date
 url = "https://sky-scrapper.p.rapidapi.com/api/v1/flights/getPriceCalendar"
-querystring = {"originSkyId": "VLC", "destinationSkyId": "AMS", "fromDate": "2021-01-01"}
+querystring = {"originSkyId": "VLC", "destinationSkyId": "AMS", "fromDate": "2024-01-01"}
 headers = {"X-RapidAPI-Key": config.api_key, "X-RapidAPI-Host": config.api_host}
 
 # Retrieve data from API and parsing text
@@ -78,17 +78,10 @@ df_c = df[['group_num', 'price', 'year', 'month', 'day', 'weekday']]
 data_corr = df_c.corr().round(3)
 
 # Show scores in heatmap for overview
-# px.imshow(data_corr).show()
-
-# Prior knowledge:
-# Correlation >=0.7 and <0.9 means there is a strong relationship between the variables.
-# Correlation >=0.5 and <0.7 means there is a moderate relationship  between the variables.
-# Correlation >=0.3 and <0.5 means there is a weak relationship between the variables.
-# Correlation <0.3 means there is no relationship between the variables.
-
-# Findings: As expected, there is a strong correlation between the variables 'price' and 'group', as they indicated the price range. No further correlations found.
+px.imshow(data_corr).show()
+# Findings: There is a strong correlation between the variables 'price' and 'group', as expected, as they indicated the price range. No further correlations found.
 
 # TO DO:
-# - Adjust chart
+# - Adjust current chart
 # - Add more charts for rest of variables
 # - Answer RQ part 1
