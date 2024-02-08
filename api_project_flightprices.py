@@ -16,7 +16,8 @@ querystring = {"originSkyId": "VLC", "destinationSkyId": "AMS", "fromDate": "202
 
 headers = {
     "X-RapidAPI-Key": "1e0d4b7f19mshc21672d5cc2b7d3p1e127ajsn754648442b38",
-    "X-RapidAPI-Host": "sky-scrapper.p.rapidapi.com"
+    "X-RapidAPI-Host": "sky-scrapper.p.rapidapi.com",
+    'Allow-Hidden': True
 }
 
 # Retrieve data and change format
